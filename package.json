@@ -1,6 +1,6 @@
 {
-  "name": "googletrans",
-  "version": "1.0.3",
+  "name": "googletrans2",
+  "version": "1.0.0",
   "description": "Free and Unlimited Google translate API for node.js",
   "files": [
     "lib/**/*"
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DarinRowe/googletrans.git"
+    "url": "git+https://github.com/ryanphung/googletrans"
   },
   "keywords": [
     "google",
@@ -28,14 +28,14 @@
     "translate",
     "node",
     "google translator",
-    "googlet ranslate"
+    "google translate"
   ],
-  "author": "Darin Lo",
+  "author": "Ryan Phung, Darin Lo",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/DarinRowe/googletrans/issues"
+    "url": "https://github.com/ryanphung/googletrans/issues"
   },
-  "homepage": "https://github.com/DarinRowe/googletrans#readme",
+  "homepage": "https://github.com/ryanphung/googletrans/#readme",
   "dependencies": {
     "axios": ">=0.21.1",
     "qs": "^6.9.3"

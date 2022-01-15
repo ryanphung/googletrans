@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 import { getUserAgent, getRandom } from "../utils";
 import { isSupported, getCode } from "../languages";
-import { getToken } from "../googleToken";
-import { googletrans, translate, getResult } from "../googletrans";
-const resposeTest = require("./resposeTest.json");
-const resposeTest2 = require("./resposeTest2.json");
-const resposeTest3 = require("./resposeTest3.json");
-const resposeTest4 = require("./resposeTest4.json");
+import { googletrans, translate, getResult, getResultFromObj } from "../googletrans";
+const responseTest = require("./responseTest.json");
+const responseTest2 = require("./responseTest2.json");
+const responseTest3 = require("./responseTest3.json");
+const responseTest4 = require("./responseTest4.json");
+const responseTest5 = require("./responseTest5.json");
 
 describe("translate Methods Test", () => {
   test("translate without any options", () => {
@@ -22,30 +22,24 @@ describe("translate Methods Test", () => {
       expect(res.text).toBe("ich spreche Niederländisch");
       expect(res.src).toBe("en");
       expect(res.hasCorrectedText).toBe(true);
-      expect(res.correctedText).toBe("I [speak] Dutch");
+      expect(res.correctedText).toBe("I <b><i>speak</i></b> Dutch");
     });
   });
 
   test("translate English text setting the source language as Portuguese", () => {
     return googletrans("Hero", { from: "pt", to: "nl" })
       .then((res) => {
+        expect(res.text).toBe("Held");
         expect(res.hasCorrectedLang).toBe(true);
         expect(res.src).toBe("en");
         expect(res.hasCorrectedText).toBe(false);
       })
-      .catch((err) => {
-        console.log(err);
-      });
   });
 
   test("async", async () => {
-    try {
-      const res = await googletrans("Hero", { to: "zh" });
-      expect(res.text).toBe("英雄");
-      expect(res.hasCorrectedText).toBe(false);
-    } catch (e) {
-      console.log(e);
-    }
+    const res = await googletrans("Hero", { to: "zh" });
+    expect(res.text).toBe("英雄");
+    expect(res.hasCorrectedText).toBe(false);
   });
 
   test("translate from an unsupported language", () => {
@@ -78,56 +72,42 @@ describe("translate Methods Test", () => {
       expect(res.src).toBe("nl");
     });
   });
+
   test("zh-hk", async () => {
-    try {
-      const res = await googletrans("media", "zh-hk");
-      expect(res.text).toBe("媒體");
-      expect(res.hasCorrectedText).toBe(false);
-    } catch (error) {
-      console.log(error);
-    }
+    const res = await googletrans("media", "zh-hk");
+    expect(res.text).toBe("媒體");
+    expect(res.hasCorrectedText).toBe(false);
   });
+
   test("zh-sg", async () => {
-    try {
-      const res = await googletrans("Game console", "zh-sg");
-      expect(res.text).toBe("游戏机");
-      expect(res.hasCorrectedText).toBe(false);
-    } catch (error) {
-      console.log(error);
-    }
+    const res = await googletrans("Game console", "zh-sg");
+    expect(res.text).toBe("游戏机");
+    expect(res.hasCorrectedText).toBe(false);
   });
+
   test("batch translation through array without empty string.", async () => {
-    try {
-      const res = await googletrans(["blue", "green", "yellow"], "nl");
-      expect(res.text).toBe("blauw\ngroen\ngeel");
-      expect(res.textArray).toContainEqual("blauw");
-      expect(res.textArray).toContainEqual("groen");
-      expect(res.textArray).toContainEqual("geel");
-    } catch (error) {
-      console.log(error);
-    }
+    const res = await googletrans(["blue", "green", "yellow"], "nl");
+    expect(res.text).toBe("blauw\ngroente\ngeel");
+    expect(res.textArray).toContainEqual("blauw");
+    expect(res.textArray).toContainEqual("groente");
+    expect(res.textArray).toContainEqual("geel");
   });
+
   test("batch translation through an element of array.", async () => {
-    try {
-      const res = await googletrans(["green"], "nl");
-      expect(res.text).toBe("groen");
-      expect(res.textArray).toContain("groen");
-      expect(res.textArray).not.toContain("geel");
-      expect(res.textArray).not.toContain("blauw");
-    } catch (error) {
-      console.log(error);
-    }
+    const res = await googletrans(["green"], "nl");
+    expect(res.text).toBe("groente");
+    expect(res.textArray).toContain("groente");
+    expect(res.textArray).not.toContain("geel");
+    expect(res.textArray).not.toContain("blauw");
   });
-  test("translation through an string.", async () => {
-    try {
-      const res = await googletrans("yellow", "nl");
-      expect(res.textArray).toContain("geel");
-      expect(res.textArray).not.toContain("groen");
-      expect(res.textArray).not.toContain("blauw");
-    } catch (error) {
-      console.log(error);
-    }
+
+  test("translation through a string.", async () => {
+    const res = await googletrans("yellow", "nl");
+    expect(res.textArray).toContain("geel");
+    expect(res.textArray).not.toContain("groen");
+    expect(res.textArray).not.toContain("blauw");
   });
+
   test("batch translation through an empty element of array.", async () => {
     try {
       const res = await googletrans([""], "nl");
@@ -137,6 +117,7 @@ describe("translate Methods Test", () => {
       expect(error.message).toMatch(/empty/);
     }
   });
+
   test("translation through an empty string.", async () => {
     try {
       const res = await googletrans("", "nl");
@@ -146,21 +127,19 @@ describe("translate Methods Test", () => {
       expect(error.message).toMatch(/empty/);
     }
   });
+
   test("batch translation by an array with an empty string.", async () => {
-    try {
-      const res = await googletrans(
-        ["yellow", "green", "", "", "blue", ""],
-        "zh"
-      );
-      expect(res.text).toBe("黄色\n绿色\n\n\n蓝色的");
-      expect(res.textArray).toContainEqual("");
-      expect(res.textArray).toContainEqual("黄色");
-      expect(res.textArray).toContainEqual("绿色");
-      expect(res.textArray).toContainEqual("蓝色的");
-    } catch (error) {
-      console.log(error);
-    }
+    const res = await googletrans(
+      ["yellow", "green", "", "", "blue", ""],
+      "zh"
+    );
+    expect(res.text).toBe("黄色的\n绿色\n\n\n蓝色");
+    expect(res.textArray).toContainEqual("");
+    expect(res.textArray).toContainEqual("黄色的");
+    expect(res.textArray).toContainEqual("绿色");
+    expect(res.textArray).toContainEqual("蓝色");
   });
+
   test("batch translation by an array with empty string, and an empty string is the first element.", async () => {
     try {
       const res = await googletrans(["", "Hello"], "nl");
@@ -168,6 +147,7 @@ describe("translate Methods Test", () => {
       expect(error.message).toMatch(/empty/);
     }
   });
+
   test("The text is over the maximum character limit ( 15k )", () => {
     let str = "";
     for (let i = 0; i < 750; i++) {
@@ -228,26 +208,6 @@ describe("getCode method Test", () => {
   });
 });
 
-describe("getToken method Test", () => {
-  test("get Token by Chinese", () => {
-    expect(getToken("你好")).toBe("964583.557971");
-  });
-
-  test("get Token by English", () => {
-    expect(getToken("Green")).toBe("701361.821189");
-  });
-
-  test("Unicode > 2048", () => {
-    expect(getToken("⁉")).toBe("631846.1019986");
-  });
-
-  test("2048 > Unicode > 128", () => {
-    // const a = getToken("ᢈ");
-    // console.log(a);
-    expect(getToken("ᢈ")).toBe("951746.569782");
-  });
-});
-
 describe("random number method Test", () => {
   test("get number by int", () => {
     expect(getRandom(0, 30)).toBeLessThanOrEqual(30);
@@ -264,21 +224,31 @@ describe("getUserAgent", () => {
   });
 });
 
-describe("getReslut method Test", () => {
-  test("getResult Test", () => {
-    const reslut = getResult(resposeTest);
-    expect(reslut.text).toBe("mais");
+describe("getResult method Test", () => {
+  test("getResult of translation of 'most' from 'en' to 'pt'", () => {
+    const result = getResultFromObj(responseTest);
+    expect(result.text).toBe("a maioria");
+    expect(result.pronunciation).toBe("mōst");
   });
-  test("getResult Test2", () => {
-    const reslut = getResult(resposeTest2);
-    expect(reslut.text).toBe("ich spreche Niederländisch");
+  test("getResult of translation of 'I spea Dutch' from 'en' to 'nl'", () => {
+    const result = getResultFromObj(responseTest2);
+    expect(result.text).toBe("ich spreche Niederländisch");
+    expect(result.pronunciation).toBe(null);
   });
-  test("getResult Test3", () => {
-    const reslut = getResult(resposeTest3);
-    expect(reslut.text).toBe("vertaler");
+  test("getResult of translation of 'translator' from 'en' to 'nl'", () => {
+    const result = getResultFromObj(responseTest3);
+    expect(result.text).toBe("vertaler");
+    expect(result.pronunciation).toBe("ˈtranzˌlādər");
   });
-  test("getResult Test4", () => {
-    const reslut = getResult(resposeTest4);
-    expect(reslut.text).toBe("你好");
+  test("getResult of translation of 'hello' from 'en' to 'zh'", () => {
+    const result = getResultFromObj(responseTest4);
+    expect(result.text).toBe("你好");
+    expect(result.pronunciation).toBe("həˈlō");
+  });
+
+  test("getResult of translation of '故事，应该从那一面墙开始说起。' from 'zh' to 'en'", () => {
+    const result = getResultFromObj(responseTest5);
+    expect(result.text).toBe("The story should start from that wall.");
+    expect(result.pronunciation).toBe("Gùshì, yīnggāi cóng nà yīmiàn qiáng kāishǐ shuō qǐ.");
   });
 });

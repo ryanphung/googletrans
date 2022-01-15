@@ -1,0 +1,397 @@
+[
+  [
+    "mōst",
+    null,
+    null,
+    [
+      [
+        [
+          0,
+          [
+            [
+              [
+                null,
+                4
+              ]
+            ],
+            [
+              true
+            ]
+          ]
+        ]
+      ],
+      4
+    ],
+    [
+      [
+        "most",
+        null,
+        null,
+        4
+      ]
+    ]
+  ],
+  [
+    [
+      [
+        null,
+        null,
+        null,
+        true,
+        null,
+        [
+          [
+            "a maioria",
+            null,
+            null,
+            null,
+            [
+              [
+                "a maioria",
+                [
+                  2
+                ]
+              ],
+              [
+                "mais",
+                [
+                  2,
+                  5
+                ]
+              ],
+              [
+                "maioria",
+                [
+                  4
+                ]
+              ],
+              [
+                "maior parte",
+                [
+                  2
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    ],
+    "pt",
+    1,
+    "en",
+    [
+      "most",
+      "en",
+      "pt",
+      true
+    ]
+  ],
+  "en",
+  [
+    "most",
+    [
+      [
+        [
+          "article",
+          [
+            [
+              "greatest in amount, quantity, or degree.",
+              "they've had the most success",
+              true,
+              null,
+              null,
+              [
+                [
+                  [
+                    [
+                      "nearly all"
+                    ],
+                    [
+                      "almost all"
+                    ],
+                    [
+                      "the greatest quantity/part/number"
+                    ],
+                    [
+                      "the majority"
+                    ],
+                    [
+                      "the bulk"
+                    ],
+                    [
+                      "the lion's share"
+                    ],
+                    [
+                      "the mass"
+                    ],
+                    [
+                      "the preponderance"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "pronoun",
+          [
+            [
+              "the greatest amount or quantity.",
+              "we had the most to lose",
+              true
+            ]
+          ]
+        ],
+        [
+          "adverb",
+          [
+            [
+              "forming the superlative of adjectives and adverbs, especially those of more than one syllable.",
+              "the most important event of my life",
+              true
+            ],
+            [
+              "to the greatest extent.",
+              "the things he most enjoyed"
+            ],
+            [
+              "extremely; very.",
+              "it was most kind of you"
+            ]
+          ]
+        ],
+        [
+          "suffix",
+          [
+            [
+              "forming superlative adjectives and adverbs from prepositions and other words indicating relative position.",
+              "innermost",
+              true
+            ]
+          ]
+        ]
+      ],
+      6,
+      true
+    ],
+    [
+      [
+        [
+          null,
+          "that is <b>most</b> probably correct"
+        ],
+        [
+          null,
+          "we had the <b>most</b> to lose"
+        ],
+        [
+          null,
+          "the <b>most</b> important event of my life"
+        ],
+        [
+          null,
+          "<b>most</b> oranges are sweeter than these"
+        ],
+        [
+          null,
+          "I spent <b>most</b> of the winter on the coast"
+        ],
+        [
+          null,
+          "sandy plains where fire tends to spread <b>most</b> quickly"
+        ],
+        [
+          null,
+          "the things he <b>most</b> enjoyed"
+        ],
+        [
+          null,
+          "they've had the <b>most</b> success"
+        ],
+        [
+          null,
+          "the candidate with <b>most</b> votes wins"
+        ],
+        [
+          null,
+          "it's the <b>most</b> I can expect to accomplish in one day"
+        ],
+        [
+          null,
+          "what she wanted <b>most</b> of all"
+        ],
+        [
+          null,
+          "it was <b>most</b> kind of you"
+        ]
+      ],
+      11,
+      12
+    ],
+    null,
+    null,
+    [
+      [
+        [
+          "noun",
+          [
+            [
+              "a maioria",
+              "as",
+              [
+                "most"
+              ],
+              1,
+              true
+            ],
+            [
+              "a maior parte",
+              "o",
+              [
+                "most",
+                "generality",
+                "lion's share"
+              ],
+              2,
+              true
+            ],
+            [
+              "o máximo",
+              "os",
+              [
+                "most",
+                "best"
+              ],
+              3,
+              true
+            ],
+            [
+              "o maior número",
+              "os",
+              [
+                "most"
+              ],
+              3,
+              true
+            ]
+          ],
+          "pt",
+          "en"
+        ],
+        [
+          "adjective",
+          [
+            [
+              "o mais",
+              null,
+              [
+                "most"
+              ],
+              2,
+              true
+            ],
+            [
+              "a mais",
+              null,
+              [
+                "most"
+              ],
+              2,
+              true
+            ],
+            [
+              "os mais",
+              null,
+              [
+                "most"
+              ],
+              2,
+              true
+            ],
+            [
+              "as mais",
+              null,
+              [
+                "most"
+              ],
+              2,
+              true
+            ],
+            [
+              "pela maior parte",
+              null,
+              [
+                "most"
+              ],
+              3,
+              true
+            ]
+          ],
+          "pt",
+          "en"
+        ],
+        [
+          "adverb",
+          [
+            [
+              "o mais",
+              null,
+              [
+                "most"
+              ],
+              2,
+              true
+            ],
+            [
+              "os mais",
+              null,
+              [
+                "most"
+              ],
+              2,
+              true
+            ],
+            [
+              "as mais",
+              null,
+              [
+                "most"
+              ],
+              2,
+              true
+            ],
+            [
+              "muitíssimo",
+              null,
+              [
+                "very much",
+                "most",
+                "a great deal",
+                "a great many"
+              ],
+              3,
+              true
+            ],
+            [
+              "pela maior parte",
+              null,
+              [
+                "most"
+              ],
+              3,
+              true
+            ]
+          ],
+          "pt",
+          "en"
+        ]
+      ],
+      14
+    ],
+    null,
+    null,
+    "en",
+    1
+  ]
+]

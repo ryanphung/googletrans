@@ -2,7 +2,6 @@ import qs from "qs";
 import axios from "axios";
 import adapter from "axios/lib/adapters/http";
 import { isSupported, getCode } from "./languages";
-import { getToken } from "./googleToken";
 import { getUserAgent } from "./utils";
 interface Options {
   from?: string;
@@ -49,7 +48,7 @@ async function translate(text: string | string[], opts?: Options) {
   const FROMTO = [_opts["from"], _opts["to"]];
   FROMTO.forEach((lang) => {
     if (lang && !isSupported(lang)) {
-      e = new Error(`The language 「${lang}」is not suppored!`);
+      e = new Error(`The language 「${lang}」is not supported!`);
       throw e;
     }
   });
@@ -86,41 +85,95 @@ async function translate(text: string | string[], opts?: Options) {
 
   _opts.from = getCode(_opts.from);
   _opts.to = getCode(_opts.to);
-  const URL = "https://translate.google." + _opts.tld + "/translate_a/single";
-  const TOKEN = getToken(_text);
+  const URL = "https://translate.google." + _opts.tld + "/_/TranslateWebserverUi/data/batchexecute";
+
+  const RPCIDS = 'MkEWBc'; // RPC ID of the translation service
 
   const PARAMS = {
-    client: _opts.client,
-    sl: _opts.from,
-    tl: _opts.to,
-    hl: "en",
-    dt: ["at", "bd", "ex", "ld", "md", "qca", "rw", "rm", "ss", "t"],
-    ie: "UTF-8",
-    oe: "UTF-8",
-    otf: 1,
-    ssel: 0,
-    tsel: 0,
-    kc: 7,
-    q: _text,
-    tk: TOKEN,
   };
+
+  const data = 'f.req=' + JSON.stringify(
+    [[[
+      RPCIDS,
+      JSON.stringify(
+        [
+          [
+            _text,
+            _opts.from,
+            _opts.to,
+            true
+          ],
+          [null]
+        ],
+      ),
+      null,
+      "generic"
+    ]]]
+  )
 
   const HEADERS = {
     "User-Agent": getUserAgent(),
-    "Accept-Encoding": "gzip",
+    "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
   };
 
   const res = await axios({
+    method: 'post',
     adapter,
     url: URL,
     params: PARAMS,
     headers: HEADERS,
+    data: encodeURI(data),
     timeout: 3 * 1000,
     paramsSerializer: (params) => {
       return qs.stringify(params, { arrayFormat: "repeat" });
     },
   });
   return getResult(res);
+}
+
+function getObjFromRes(res: any): any {
+  const body = res.data;
+  let obj = JSON.parse(body.split('\n\n')[1]);
+  return JSON.parse(obj[0][2])
+}
+
+function getResultFromObj(obj: any): Result {
+  // console.log('obj:', JSON.stringify(obj))
+  let result: Result = {
+    text: "",
+    textArray: [],
+    pronunciation: "",
+    hasCorrectedLang: false,
+    src: "",
+    hasCorrectedText: false,
+    correctedText: "",
+    translations: [],
+    raw: [],
+  };
+
+  result.src = obj[1][3];
+  result.pronunciation = obj[0][0];
+  const correction = obj[0][1];
+
+  if (correction?.length) {
+    const textCorrection = correction[0]
+    if (textCorrection?.length) {
+      result.hasCorrectedText = true;
+      result.correctedText = textCorrection[0][1];
+    }
+
+    const languageCorrection = correction[1]
+    if (languageCorrection?.length) {
+      result.hasCorrectedLang = true;
+      result.src = languageCorrection[0];
+    }
+  }
+
+  const translation = obj[1][0][0][5];
+  result.text = translation.map(v => v[0]).join('');
+  result.textArray = result.text.split('\n');
+
+  return result;
 }
 
 function getResult(res: any): Result {
@@ -138,41 +191,42 @@ function getResult(res: any): Result {
 
   if (res === null) return result;
   if (res.status === 200) result.raw = res.data;
-  const body = res.data;
-  body[0].forEach((obj: string) => {
-    if (obj[0]) {
-      result.text += obj[0];
-    }
-    if (obj[2]) {
-      result.pronunciation += obj[2];
-    }
-  });
+  const obj = getObjFromRes(res);
+  return getResultFromObj(obj);
 
-  if (body[2] === body[8][0][0]) {
-    result.src = body[2];
-  } else {
-    result.hasCorrectedLang = true;
-    result.src = body[8][0][0];
-  }
+  // body.split('\n').forEach((line: string) => {
+  //   if (line.include(RPCIDS)) {
+  //     obj = line.split(',')[1];
+  //     if (!obj.length)
+  //
+  //   }
 
-  if (body[1] && body[1][0][2]) result.translations = body[1][0][2];
+    // if (obj[0]) {
+    //   result.text += obj[0];
+    // }
+    // if (obj[2]) {
+    //   result.pronunciation += obj[2];
+    // }
+  // });
 
-  if (body[7] && body[7][0]) {
-    let str = body[7][0];
-    str = str.replace(/<b><i>/g, "[");
-    str = str.replace(/<\/i><\/b>/g, "]");
-    result.correctedText = str;
-
-    if (body[7][5]) result.hasCorrectedText = true;
-  }
-
-  if (result.text.indexOf("\n") !== -1) {
-    result.textArray = result.text.split("\n");
-  } else {
-    result.textArray.push(result.text);
-  }
-  return result;
+  // if (body[2] === body[8][0][0]) {
+  //   result.src = body[2];
+  // } else {
+  //   result.hasCorrectedLang = true;
+  //   result.src = body[8][0][0];
+  // }
+  //
+  // if (body[1] && body[1][0][2]) result.translations = body[1][0][2];
+  //
+  // if (body[7] && body[7][0]) {
+  //   let str = body[7][0];
+  //   str = str.replace(/<b><i>/g, "[");
+  //   str = str.replace(/<\/i><\/b>/g, "]");
+  //   result.correctedText = str;
+  //
+  //   if (body[7][5]) result.hasCorrectedText = true;
+  // }
 }
 
 export default googletrans;
-export { googletrans, translate, getResult };
+export { googletrans, translate, getResult, getResultFromObj };
